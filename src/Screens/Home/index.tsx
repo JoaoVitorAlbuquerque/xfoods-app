@@ -10,6 +10,7 @@ import {
   Footer,
   FooterContainer,
 } from "./styles";
+import { Button } from "../../components/Button";
 
 export default function Home() {
   return (
@@ -28,7 +29,11 @@ export default function Home() {
       </View>
 
       <Footer>
-        <FooterContainer></FooterContainer>
+        <FooterContainer>
+          <Button onPress={() => alert('Novo Pedido')}>
+            Novo Pedido
+          </Button>
+        </FooterContainer>
       </Footer>
     </>
   );
