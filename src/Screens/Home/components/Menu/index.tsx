@@ -25,7 +25,7 @@ export function Menu() {
         <Product>
           <ProductImage
             source={{
-              uri: `http://10.0.0.100:3000/uploads/${product.imagePath}`,
+              uri: `http://192.168.15.8:3000/uploads/${product.imagePath}`,
             }}
           />
 

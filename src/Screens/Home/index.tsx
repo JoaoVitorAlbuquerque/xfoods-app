@@ -10,13 +10,28 @@ import {
   Footer,
   FooterContainer,
 } from "./styles";
+
 import { Button } from "../../components/Button";
+import { TableModal } from "./components/TableModal";
+import { useHomeController } from "./useHomeController";
 
 export default function Home() {
+  const {
+    isTabeModalVisible,
+    handleOpenTableModal,
+    handleCloseTableModal,
+    selectedTable,
+    handleSaveTable,
+    handleCancelOrder,
+  } = useHomeController();
+
   return (
     <>
       <View style={{ flex: 1 }}>
-        <Header />
+        <Header
+          selectedTable={selectedTable}
+          onCancelOrder={handleCancelOrder}
+        />
 
         <CategoriesContainer>
           <Categories />
@@ -30,11 +45,19 @@ export default function Home() {
 
       <Footer>
         <FooterContainer>
-          <Button onPress={() => alert('Novo Pedido')}>
-            Novo Pedido
-          </Button>
+          {!selectedTable && (
+            <Button onPress={() => handleOpenTableModal()}>
+              Novo Pedido
+            </Button>
+          )}
         </FooterContainer>
       </Footer>
+
+      <TableModal
+        visible={isTabeModalVisible}
+        onCloseTableModal={handleCloseTableModal}
+        onSave={handleSaveTable}
+      />
     </>
   );
 };
