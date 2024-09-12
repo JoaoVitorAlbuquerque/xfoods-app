@@ -5,45 +5,62 @@ import { Text } from "../../../../components/Text";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 
 import {
-  Product,
+  ProductContainer,
   ProductImage,
   ProductDetails,
   Separator,
   AddToCartButton,
 } from './styles';
 import { PlusCircle } from "../../../../components/Icons/PlusCircle";
+import { ProductModal } from "../ProductModal";
+import { useMenuController } from "./useMenuController";
 
 export function Menu() {
+  const {
+    isProductModalVisible,
+    handleOpenProductModal,
+    handleCloseProductModal,
+    selectedProduct,
+  } = useMenuController();
+
   return (
-    <FlatList
-      data={products}
-      style={{ marginTop: 32 }}
-      contentContainerStyle={{ paddingHorizontal: 24 }}
-      ItemSeparatorComponent={Separator}
-      keyExtractor={product => product.id}
-      renderItem={({ item: product }) => (
-        <Product>
-          <ProductImage
-            source={{
-              uri: `http://192.168.15.8:3000/uploads/${product.imagePath}`,
-            }}
-          />
+    <>
+      <ProductModal
+        visible={isProductModalVisible}
+        onCloseProductModal={handleCloseProductModal}
+        product={selectedProduct}
+      />
 
-          <ProductDetails>
-            <Text weight="600">{product.name}</Text>
-            <Text size={14} color="#666" style={{ marginVertical: 8 }}>
-              {product.description}
-            </Text>
-            <Text size={14} weight="600">
-              {formatCurrency(product.price)}
-            </Text>
-          </ProductDetails>
+      <FlatList
+        data={products}
+        style={{ marginTop: 32 }}
+        contentContainerStyle={{ paddingHorizontal: 24 }}
+        ItemSeparatorComponent={Separator}
+        keyExtractor={product => product.id}
+        renderItem={({ item: product }) => (
+          <ProductContainer onPress={() => handleOpenProductModal(product)}>
+            <ProductImage
+              source={{
+                uri: `http://192.168.15.2:3000/uploads/${product.imagePath}`,
+              }}
+            />
 
-          <AddToCartButton style={{ position: 'absolute' }}>
-            <PlusCircle />
-          </AddToCartButton>
-        </Product>
-      )}
-    />
+            <ProductDetails>
+              <Text weight="600">{product.name}</Text>
+              <Text size={14} color="#666" style={{ marginVertical: 8 }}>
+                {product.description}
+              </Text>
+              <Text size={14} weight="600">
+                {formatCurrency(product.price)}
+              </Text>
+            </ProductDetails>
+
+            <AddToCartButton style={{ position: 'absolute' }}>
+              <PlusCircle />
+            </AddToCartButton>
+          </ProductContainer>
+        )}
+      />
+    </>
   );
 }
