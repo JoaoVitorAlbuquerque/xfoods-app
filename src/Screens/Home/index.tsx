@@ -14,6 +14,7 @@ import {
 import { Button } from "../../components/Button";
 import { TableModal } from "./components/TableModal";
 import { useHomeController } from "./useHomeController";
+import { Cart } from "./components/Cart";
 
 export default function Home() {
   const {
@@ -23,6 +24,7 @@ export default function Home() {
     selectedTable,
     handleSaveTable,
     handleCancelOrder,
+    cartItems,
   } = useHomeController();
 
   return (
@@ -49,6 +51,12 @@ export default function Home() {
             <Button onPress={() => handleOpenTableModal()}>
               Novo Pedido
             </Button>
+          )}
+
+          {selectedTable && (
+            <Cart
+              cartItems={cartItems}
+            />
           )}
         </FooterContainer>
       </Footer>
