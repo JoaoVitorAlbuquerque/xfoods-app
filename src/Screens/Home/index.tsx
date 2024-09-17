@@ -25,6 +25,8 @@ export default function Home() {
     handleSaveTable,
     handleCancelOrder,
     cartItems,
+    handleAddToCart,
+    handleDecrementCartItem,
   } = useHomeController();
 
   return (
@@ -40,7 +42,7 @@ export default function Home() {
         </CategoriesContainer>
 
         <MenuContainer>
-          <Menu />
+          <Menu onAddToCart={handleAddToCart} />
         </MenuContainer>
 
       </View>
@@ -56,6 +58,8 @@ export default function Home() {
           {selectedTable && (
             <Cart
               cartItems={cartItems}
+              onAdd={handleAddToCart}
+              onDecrement={handleDecrementCartItem}
             />
           )}
         </FooterContainer>

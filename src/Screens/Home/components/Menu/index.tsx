@@ -11,11 +11,18 @@ import {
   Separator,
   AddToCartButton,
 } from './styles';
+
 import { PlusCircle } from "../../../../components/Icons/PlusCircle";
 import { ProductModal } from "../ProductModal";
 import { useMenuController } from "./useMenuController";
 
-export function Menu() {
+import { Product } from "../../../../types/Product";
+
+interface MenuProps {
+  onAddToCart(product: Product): void;
+}
+
+export function Menu({ onAddToCart }: MenuProps) {
   const {
     isProductModalVisible,
     handleOpenProductModal,
@@ -29,6 +36,7 @@ export function Menu() {
         visible={isProductModalVisible}
         onCloseProductModal={handleCloseProductModal}
         product={selectedProduct}
+        onAddToCart={onAddToCart}
       />
 
       <FlatList
@@ -55,7 +63,7 @@ export function Menu() {
               </Text>
             </ProductDetails>
 
-            <AddToCartButton style={{ position: 'absolute' }}>
+            <AddToCartButton style={{ position: 'absolute' }} onPress={() => onAddToCart(product)}>
               <PlusCircle />
             </AddToCartButton>
           </ProductContainer>

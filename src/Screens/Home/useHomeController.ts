@@ -1,20 +1,12 @@
 import { useState } from "react";
 import { CartItem } from "../../types/CartItem";
 import { products } from "../../mocks/products";
+import { Product } from "../../types/Product";
 
 export function useHomeController() {
   const [isTabeModalVisible, setisTabeModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      quantity: 1,
-      product: products[0],
-    },
-    {
-      quantity: 2,
-      product: products[1],
-    },
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   function handleOpenTableModal() {
     setisTabeModalVisible(true);
@@ -31,6 +23,55 @@ export function useHomeController() {
 
   function handleCancelOrder() {
     setSelectedTable('');
+    setCartItems([]);
+  }
+
+  function handleAddToCart(product: Product) {
+    if (!selectedTable) {
+      handleOpenTableModal();
+    }
+
+    setCartItems((prevState) => {
+      const itemIndex = prevState.findIndex(cartItem => cartItem.product.id === product.id);
+
+      if (itemIndex < 0) {
+        return prevState.concat({
+          quantity: 1,
+          product,
+        });
+      }
+
+      const newCartItems = [...prevState];
+      const item = newCartItems[itemIndex];
+
+      newCartItems[itemIndex] = {
+        ...item,
+        quantity: item.quantity + 1,
+      };
+
+      return newCartItems;
+    });
+  }
+
+  function handleDecrementCartItem(product: Product) {
+    setCartItems((prevState) => {
+      const itemIndex = prevState.findIndex(cartItem => cartItem.product.id === product.id);
+      const item = prevState[itemIndex];
+      const newCartItems = [...prevState];
+
+      if (item.quantity === 1) {
+        newCartItems.splice(itemIndex, 1);
+
+        return newCartItems;
+      }
+
+      newCartItems[itemIndex] = {
+        ...item,
+        quantity: item.quantity - 1,
+      };
+
+      return newCartItems;
+    });
   }
 
   return {
@@ -41,5 +82,7 @@ export function useHomeController() {
     handleSaveTable,
     handleCancelOrder,
     cartItems,
+    handleAddToCart,
+    handleDecrementCartItem,
   };
 };

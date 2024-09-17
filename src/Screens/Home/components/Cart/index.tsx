@@ -1,8 +1,9 @@
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 
 import { CartItem } from "../../../../types/CartItem";
 
 import { Text } from "../../../../components/Text";
+import { Button } from "../../../../components/Button";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { PlusCircle } from "../../../../components/Icons/PlusCircle";
 import { MinusCircle } from "../../../../components/Icons/MinusCircle";
@@ -16,14 +17,23 @@ import {
   QuantityContainer,
   Summary,
   TotalContainer,
+  SizeContainer,
 } from "./styles";
-import { Button } from "../../../../components/Button";
+
+import { Product } from "../../../../types/Product";
+import { useCartController } from "./useCartController";
 
 interface CartProps {
   cartItems: CartItem[];
+  onAdd(product: Product): void;
+  onDecrement(product: Product): void;
 }
 
-export function Cart({ cartItems }: CartProps) {
+export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
+  const {
+    total,
+  } = useCartController(cartItems);
+
   return (
     <>
       {cartItems.length > 0 && (
@@ -49,18 +59,31 @@ export function Cart({ cartItems }: CartProps) {
 
                 <ProductDetails>
                   <Text size={14} weight="600">{cartItem.product.name}</Text>
-                  <Text size={14} color="#666" style={{ marginTop: 4 }}>
-                    {formatCurrency(cartItem.product.price)}
-                  </Text>
+
+                  <SizeContainer>
+                    <Text size={14} color="#666" style={{ marginTop: 4 }}>
+                      {formatCurrency(cartItem.product.price)}
+                    </Text>
+
+                    {cartItem.product.ingredients.length > 0 ? (
+                      <View
+                        style={{ padding: 2, minWidth: 48, borderRadius: 24 , backgroundColor: '#f00', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <Text weight="600" color="#fff">
+                          G
+                        </Text>
+                      </View>
+                    ) : null}
+                  </SizeContainer>
                 </ProductDetails>
               </ProductContainer>
 
               <Actions>
-                <TouchableOpacity style={{ marginRight: 24 }}>
+                <TouchableOpacity style={{ marginRight: 24 }} onPress={() => onAdd(cartItem.product)}>
                   <PlusCircle />
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => onDecrement(cartItem.product)}>
                   <MinusCircle />
                 </TouchableOpacity>
               </Actions>
@@ -75,10 +98,10 @@ export function Cart({ cartItems }: CartProps) {
             <>
               <Text color="#666">Total</Text>
               <Text size={20} weight="600">
-                {formatCurrency(120)}
+                {formatCurrency(total)}
               </Text>
             </>
-          ): (
+          ) : (
             <Text color="#999">Seu carrinho está vazio</Text>
           )}
         </TotalContainer>

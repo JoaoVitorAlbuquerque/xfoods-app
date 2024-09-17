@@ -1,4 +1,4 @@
-import { FlatList, Modal, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, View } from "react-native";
 
 import { Close } from "../../../../components/Icons/Close";
 import { Text } from "../../../../components/Text";
@@ -17,14 +17,25 @@ import {
 } from "./styles";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { Button } from "../../../../components/Button";
+import { useProductModalController } from "./useProductModalController";
 
 interface ProductModalProps {
   visible: boolean;
   onCloseProductModal(): void;
   product: Product | null;
+  onAddToCart(product: Product): void;
 }
 
-export function ProductModal({ visible, onCloseProductModal, product }: ProductModalProps) {
+export function ProductModal({
+  visible,
+  onCloseProductModal,
+  product,
+  onAddToCart,
+}: ProductModalProps) {
+  const {
+    handleAddToCart,
+  } = useProductModalController(onAddToCart, onCloseProductModal);
+
   if (!product) {
     return null;
   }
@@ -87,7 +98,7 @@ export function ProductModal({ visible, onCloseProductModal, product }: ProductM
             </Text>
           </PriceContainer>
 
-          <Button onPress={() => alert('Adicionar ao pedido')}>
+          <Button onPress={() => handleAddToCart(product)}>
             Adicionar ao pedido
           </Button>
         </FooterContainer>

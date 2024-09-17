@@ -26,7 +26,15 @@ export const QuantityContainer = styled.View`
   margin-left: 12px;
 `;
 
-export const ProductDetails = styled.View``;
+export const ProductDetails = styled.View`
+  flex-direction: column;
+`;
+
+export const SizeContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+`;
 
 export const Summary = styled.View`
   flex-direction: row;
