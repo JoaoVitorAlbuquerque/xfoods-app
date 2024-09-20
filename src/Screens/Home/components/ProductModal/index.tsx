@@ -1,4 +1,4 @@
-import { FlatList, Modal, View } from "react-native";
+import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 
 import { Close } from "../../../../components/Icons/Close";
 import { Text } from "../../../../components/Text";
@@ -15,6 +15,7 @@ import {
   FooterContainer,
   PriceContainer,
 } from "./styles";
+
 import { formatCurrency } from "../../../../utils/formatCurrency";
 import { Button } from "../../../../components/Button";
 import { useProductModalController } from "./useProductModalController";
@@ -49,7 +50,7 @@ export function ProductModal({
     >
       <Image
         source={{
-          uri: `http://192.168.15.2:3000/uploads/${product.imagePath}`,
+          uri: `http://10.0.0.100:3000/uploads/${product.imagePath}`,
         }}
       >
         <CloseButton onPress={onCloseProductModal}>
@@ -70,7 +71,6 @@ export function ProductModal({
             <FlatList
               data={product.ingredients}
               keyExtractor={ingredient => ingredient.id}
-              showsVerticalScrollIndicator={false}
               style={{ marginTop: 16 }}
               renderItem={({ item: ingredient }) => (
                 <Ingredient>

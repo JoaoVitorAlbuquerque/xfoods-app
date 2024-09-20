@@ -51,3 +51,5 @@ export const FooterContainer = styled.SafeAreaView`
 `;
 
 export const PriceContainer = styled.View``;
+
+export const SizeContainer = styled.TouchableOpacity``;

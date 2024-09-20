@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { CartItem } from "../../types/CartItem";
-import { products } from "../../mocks/products";
 import { Product } from "../../types/Product";
+
+import { Category } from "../../types/Category";
+import { api } from "../../utils/api";
 
 export function useHomeController() {
   const [isTabeModalVisible, setisTabeModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      api.get('/categories'),
+      api.get('/products'),
+    ]).then(([categoriesResponse, productsResponse]) => {
+      setCategories(categoriesResponse.data);
+      setProducts(productsResponse.data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  async function handleSelectCategory(categoryId: string) {
+    const route = !categoryId ? '/products' : `/products/${categoryId}`;
+
+    setIsLoadingProducts(true);
+
+    const { data } = await api.get(route);
+
+    setProducts(data);
+    setIsLoadingProducts(false);
+  }
 
   function handleOpenTableModal() {
     setisTabeModalVisible(true);
@@ -21,7 +50,7 @@ export function useHomeController() {
     handleCloseTableModal();
   }
 
-  function handleCancelOrder() {
+  function handleResetOrder() {
     setSelectedTable('');
     setCartItems([]);
   }
@@ -80,9 +109,14 @@ export function useHomeController() {
     handleCloseTableModal,
     selectedTable,
     handleSaveTable,
-    handleCancelOrder,
+    handleResetOrder,
     cartItems,
     handleAddToCart,
     handleDecrementCartItem,
+    isLoading,
+    products,
+    categories,
+    handleSelectCategory,
+    isLoadingProducts,
   };
 };

@@ -1,4 +1,4 @@
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native";
 
 import { CartItem } from "../../../../types/CartItem";
 
@@ -22,20 +22,57 @@ import {
 
 import { Product } from "../../../../types/Product";
 import { useCartController } from "./useCartController";
+import { OrderConfirmedModal } from "../../../../components/OrderConfirmedModal";
+import { SizeModal } from "../SizeModal";
+import { DescriptionModal } from "./components/DescriptionModal";
 
 interface CartProps {
   cartItems: CartItem[];
   onAdd(product: Product): void;
   onDecrement(product: Product): void;
+  onConfirmOrder(): void;
 }
 
-export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
+export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProps) {
   const {
     total,
-  } = useCartController(cartItems);
+    handleConfirmOrder, //
+    isConfirmedModalVisible,
+    handleCloseConfirmedModal,
+    handleOk,
+    isLoadingCart, //
+    isSizeModalVisible,
+    handleOpenSizeModal,
+    handleCloseSizeModal,
+    selectedSize,
+    handleSelectSize,
+    isDescriptionModalVisible,
+    handleOpenDescriptionModal,
+    handleCloseDescriptionModal,
+  } = useCartController(cartItems, onConfirmOrder);
 
   return (
     <>
+      <OrderConfirmedModal
+        visible={isConfirmedModalVisible}
+        onCloseConfirmedModal={handleCloseConfirmedModal}
+        onOk={handleOk}
+      />
+
+      <SizeModal
+        visible={isSizeModalVisible}
+        selectedSize={selectedSize}
+        onSelectSize={handleSelectSize}
+        onCloseSizeModal={handleCloseSizeModal}
+      />
+
+      <DescriptionModal
+        visible={isDescriptionModalVisible}
+        onClose={handleCloseDescriptionModal}
+        onConfirmOrder={handleConfirmOrder}
+        isLoading={isLoadingCart}
+      />
+
       {cartItems.length > 0 && (
         <FlatList
           data={cartItems}
@@ -47,7 +84,7 @@ export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
               <ProductContainer>
                 <Image
                   source={{
-                    uri: `http://192.168.100.150:3000/uploads/${cartItem.product.imagePath}`,
+                    uri: `http://10.0.0.100:3000/uploads/${cartItem.product.imagePath}`,
                   }}
                 />
 
@@ -66,20 +103,26 @@ export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
                     </Text>
 
                     {cartItem.product.ingredients.length > 0 ? (
-                      <View
+                      <TouchableOpacity
+                        onPress={handleOpenSizeModal}
                         style={{ padding: 2, minWidth: 48, borderRadius: 24 , backgroundColor: '#f00', alignItems: 'center', justifyContent: 'center' }}
                       >
                         <Text weight="600" color="#fff">
-                          G
+                          {selectedSize === 'SMALL' && 'P'}
+                          {selectedSize === 'MEAN' && 'M'}
+                          {selectedSize === 'LARGE' && 'G'}
                         </Text>
-                      </View>
+                      </TouchableOpacity>
                     ) : null}
                   </SizeContainer>
                 </ProductDetails>
               </ProductContainer>
 
               <Actions>
-                <TouchableOpacity style={{ marginRight: 24 }} onPress={() => onAdd(cartItem.product)}>
+                <TouchableOpacity
+                  style={{ marginRight: 24 }}
+                  onPress={() => onAdd(cartItem.product)}
+                >
                   <PlusCircle />
                 </TouchableOpacity>
 
@@ -106,7 +149,11 @@ export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
           )}
         </TotalContainer>
 
-        <Button onPress={() => alert('Confirmar pedido')} disabled={cartItems.length === 0}>
+        <Button
+          onPress={handleOpenDescriptionModal}
+          disabled={cartItems.length === 0}
+          // isLoading={isLoadingCart}
+        >
           Confirmar pedido
         </Button>
       </Summary>

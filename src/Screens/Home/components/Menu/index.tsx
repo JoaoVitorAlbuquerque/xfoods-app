@@ -1,6 +1,5 @@
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList } from "react-native";
 
-import { products } from '../../../../mocks/products';
 import { Text } from "../../../../components/Text";
 import { formatCurrency } from "../../../../utils/formatCurrency";
 
@@ -20,9 +19,10 @@ import { Product } from "../../../../types/Product";
 
 interface MenuProps {
   onAddToCart(product: Product): void;
+  products: Product[];
 }
 
-export function Menu({ onAddToCart }: MenuProps) {
+export function Menu({ onAddToCart, products }: MenuProps) {
   const {
     isProductModalVisible,
     handleOpenProductModal,
@@ -49,7 +49,7 @@ export function Menu({ onAddToCart }: MenuProps) {
           <ProductContainer onPress={() => handleOpenProductModal(product)}>
             <ProductImage
               source={{
-                uri: `http://192.168.100.150:3000/uploads/${product.imagePath}`,
+                uri: `http://10.0.0.100:3000/uploads/${product.imagePath}`,
               }}
             />
 

@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 import { Header } from "../../components/Header";
 import { Categories } from "./components/Categories";
@@ -9,12 +9,15 @@ import {
   MenuContainer,
   Footer,
   FooterContainer,
+  CenteredContainer,
 } from "./styles";
 
 import { Button } from "../../components/Button";
 import { TableModal } from "./components/TableModal";
 import { useHomeController } from "./useHomeController";
 import { Cart } from "./components/Cart";
+import { Empty } from "../../components/Icons/Empty";
+import { Text } from "../../components/Text";
 
 export default function Home() {
   const {
@@ -23,10 +26,15 @@ export default function Home() {
     handleCloseTableModal,
     selectedTable,
     handleSaveTable,
-    handleCancelOrder,
+    handleResetOrder,
     cartItems,
     handleAddToCart,
     handleDecrementCartItem,
+    isLoading,
+    products,
+    categories,
+    handleSelectCategory,
+    isLoadingProducts,
   } = useHomeController();
 
   return (
@@ -34,23 +42,59 @@ export default function Home() {
       <View style={{ flex: 1 }}>
         <Header
           selectedTable={selectedTable}
-          onCancelOrder={handleCancelOrder}
+          onCancelOrder={handleResetOrder}
         />
 
-        <CategoriesContainer>
-          <Categories />
-        </CategoriesContainer>
+        {isLoading && (
+          <CenteredContainer>
+            <ActivityIndicator color="#d73035" size="large" />
+          </CenteredContainer>
+        )}
 
-        <MenuContainer>
-          <Menu onAddToCart={handleAddToCart} />
-        </MenuContainer>
+        {!isLoading && (
+          <>
+            <CategoriesContainer>
+              <Categories
+                categories={categories}
+                onSelectCategory={handleSelectCategory}
+              />
+            </CategoriesContainer>
 
+            {isLoadingProducts ? (
+              <CenteredContainer>
+                <ActivityIndicator color="#d73035" size="large" />
+              </CenteredContainer>
+            ) : (
+              <>
+                {products.length > 0 ? (
+                  <MenuContainer>
+                    <Menu
+                      onAddToCart={handleAddToCart}
+                      products={products}
+                    />
+                  </MenuContainer>
+                ) : (
+                  <CenteredContainer>
+                    <Empty />
+
+                    <Text color="#666" style={{ marginTop: 24 }}>
+                      Nenhum produto foi encontrado!
+                    </Text>
+                  </CenteredContainer>
+                )}
+              </>
+            )}
+          </>
+        )}
       </View>
 
       <Footer>
         <FooterContainer>
           {!selectedTable && (
-            <Button onPress={() => handleOpenTableModal()}>
+            <Button
+              onPress={() => handleOpenTableModal()}
+              disabled={isLoading}
+            >
               Novo Pedido
             </Button>
           )}
@@ -60,6 +104,7 @@ export default function Home() {
               cartItems={cartItems}
               onAdd={handleAddToCart}
               onDecrement={handleDecrementCartItem}
+              onConfirmOrder={handleResetOrder}
             />
           )}
         </FooterContainer>
