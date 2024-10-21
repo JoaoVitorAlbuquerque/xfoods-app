@@ -44,12 +44,12 @@ export function Menu({ onAddToCart, products }: MenuProps) {
         style={{ marginTop: 32 }}
         contentContainerStyle={{ paddingHorizontal: 24 }}
         ItemSeparatorComponent={Separator}
-        keyExtractor={product => product.id}
+        keyExtractor={product => product._id}
         renderItem={({ item: product }) => (
           <ProductContainer onPress={() => handleOpenProductModal(product)}>
             <ProductImage
               source={{
-                uri: `http://10.0.0.100:3000/uploads/${product.imagePath}`,
+                uri: `http://192.168.15.3:3333/uploads/${product.imagePath}`,
               }}
             />
 

@@ -31,9 +31,16 @@ interface CartProps {
   onAdd(product: Product): void;
   onDecrement(product: Product): void;
   onConfirmOrder(): void;
+  selectedTable: string;
 }
 
-export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProps) {
+export function Cart({
+  cartItems,
+  onAdd,
+  onDecrement,
+  onConfirmOrder,
+  selectedTable,
+}: CartProps) {
   const {
     total,
     handleConfirmOrder, //
@@ -49,7 +56,9 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
     isDescriptionModalVisible,
     handleOpenDescriptionModal,
     handleCloseDescriptionModal,
-  } = useCartController(cartItems, onConfirmOrder);
+    setDescription,
+    description,
+  } = useCartController(cartItems, onConfirmOrder, selectedTable);
 
   return (
     <>
@@ -71,12 +80,14 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
         onClose={handleCloseDescriptionModal}
         onConfirmOrder={handleConfirmOrder}
         isLoading={isLoadingCart}
+        setDescription={setDescription} //
+        description={description}
       />
 
       {cartItems.length > 0 && (
         <FlatList
           data={cartItems}
-          keyExtractor={cartItem => cartItem.product.id}
+          keyExtractor={cartItem => cartItem.product._id}
           showsVerticalScrollIndicator={false}
           style={{ marginBottom: 12, maxHeight: 140 }}
           renderItem={({ item: cartItem }) => (
@@ -84,7 +95,7 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
               <ProductContainer>
                 <Image
                   source={{
-                    uri: `http://10.0.0.100:3000/uploads/${cartItem.product.imagePath}`,
+                    uri: `http://192.168.15.3:3333/uploads/${cartItem.product.imagePath}`,
                   }}
                 />
 
@@ -121,13 +132,13 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
               <Actions>
                 <TouchableOpacity
                   style={{ marginRight: 24 }}
-                  onPress={() => onAdd(cartItem.product)}
+                  onPress={() => onDecrement(cartItem.product)}
                 >
-                  <PlusCircle />
+                  <MinusCircle />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => onDecrement(cartItem.product)}>
-                  <MinusCircle />
+                <TouchableOpacity onPress={() => onAdd(cartItem.product)}>
+                  <PlusCircle />
                 </TouchableOpacity>
               </Actions>
             </Item>
@@ -152,7 +163,7 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmOrder }: CartProp
         <Button
           onPress={handleOpenDescriptionModal}
           disabled={cartItems.length === 0}
-          // isLoading={isLoadingCart}
+          isLoading={isLoadingCart}
         >
           Confirmar pedido
         </Button>

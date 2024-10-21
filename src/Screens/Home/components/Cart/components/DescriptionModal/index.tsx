@@ -5,15 +5,25 @@ import { Button } from "../../../../../../components/Button";
 import { Close } from "../../../../../../components/Icons/Close";
 
 import { Actions, Form, Header, ModalBody, Overlay, TextArea } from "./styles";
+import { useState } from "react";
 
 interface DescriptionModalProps {
   visible: boolean;
   onClose(): void;
   onConfirmOrder(): void;
   isLoading: boolean;
+  setDescription(value: string): void;
+  description: string;
 }
 
-export function DescriptionModal({ visible, onClose, onConfirmOrder, isLoading }: DescriptionModalProps) {
+export function DescriptionModal({
+  visible,
+  onClose,
+  onConfirmOrder,
+  isLoading,
+  setDescription,
+  description,
+}: DescriptionModalProps) {
   return (
     <Modal
       visible={visible}
@@ -31,7 +41,10 @@ export function DescriptionModal({ visible, onClose, onConfirmOrder, isLoading }
           </Header>
 
           <Form>
-            <TextArea placeholder="Adicione uma descrição..." />
+            <TextArea
+              placeholder="Adicione uma descrição..."
+              onChangeText={setDescription}
+            />
           </Form>
 
           <Actions>
@@ -45,7 +58,7 @@ export function DescriptionModal({ visible, onClose, onConfirmOrder, isLoading }
 
             <Button
               onPress={onConfirmOrder}
-              // disabled
+              disabled={description.length === 0}
               isLoading={isLoading}
             >
               Confirmar Pedido

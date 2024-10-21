@@ -25,12 +25,12 @@ export function Categories({ categories, onSelectCategory }: CategoriesProps) {
       showsHorizontalScrollIndicator={false}
       data={categories}
       contentContainerStyle={{ paddingRight: 24 }}
-      keyExtractor={category => category.id}
+      keyExtractor={category => category._id}
       renderItem={({ item: category }) => {
-        const isSelected = selectedCategory === category.id;
+        const isSelected = selectedCategory === category._id;
 
         return (
-          <CategoryContainer onPress={() => handleSelectCategory(category.id)}>
+          <CategoryContainer onPress={() => handleSelectCategory(category._id)}>
             <Icon>
               <Text opacity={isSelected ? 1 : 0.5}>{category.icon}</Text>
             </Icon>

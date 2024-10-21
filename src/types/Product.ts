@@ -1,5 +1,5 @@
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   imagePath: string;
@@ -7,8 +7,8 @@ export interface Product {
   quantity?: number; //
   size?: string; //
   ingredients: {
-      name: string;
-      icon: string;
-      id: string;
+    _id: string;
+    icon: string;
+    name: string;
   }[];
 }

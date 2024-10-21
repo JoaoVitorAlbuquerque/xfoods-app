@@ -50,7 +50,7 @@ export function ProductModal({
     >
       <Image
         source={{
-          uri: `http://10.0.0.100:3000/uploads/${product.imagePath}`,
+          uri: `http://192.168.15.3:3333/uploads/${product.imagePath}`,
         }}
       >
         <CloseButton onPress={onCloseProductModal}>
@@ -70,7 +70,7 @@ export function ProductModal({
           {product.ingredients.length > 0 ? (
             <FlatList
               data={product.ingredients}
-              keyExtractor={ingredient => ingredient.id}
+              keyExtractor={ingredient => ingredient._id}
               style={{ marginTop: 16 }}
               renderItem={({ item: ingredient }) => (
                 <Ingredient>

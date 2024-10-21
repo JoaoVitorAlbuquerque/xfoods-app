@@ -1,13 +1,19 @@
 import { useState } from "react";
 
 import { CartItem } from "../../../../types/CartItem";
+import { api } from "../../../../utils/api";
 
-export function useCartController(cartItem: CartItem[], onConfirmOrder: () => void) {
+export function useCartController(
+  cartItem: CartItem[],
+  onConfirmOrder: () => void,
+  selectedTable: string
+) {
   const [isConfirmedModalVisible, setIsConfirmedModalVisible] = useState(false);
   const [isDescriptionModalVisible, setIsDescriptionModalVisible] = useState(false);
   const [isSizeModalVisible, setIsSizeModalVisible] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string>('MEAN');
-  const [isLoadingCart] = useState(false);
+  const [description, setDescription] = useState('');
+  const [isLoadingCart, setIsLoadingCart] = useState(false);
 
   const total = cartItem.reduce((acc, cartItem) => {
     return acc + cartItem.quantity * cartItem.product.price;
@@ -29,7 +35,24 @@ export function useCartController(cartItem: CartItem[], onConfirmOrder: () => vo
     setIsConfirmedModalVisible(false);
   }
 
-  function handleConfirmOrder() {
+  async function handleConfirmOrder() {
+    setIsLoadingCart(true);
+
+    const payload = {
+      table: Number(selectedTable),
+      description: description,
+      products: cartItem.map(({ product, quantity }) => ({
+        product: product._id,
+        size: selectedSize,
+        quantity: quantity,
+      })),
+    };
+
+    console.log(JSON.stringify(payload, null, 2));
+
+    await api.post('/orders', payload);
+
+    setIsLoadingCart(false);
     handleOpenConfirmedModal();
   }
 
@@ -67,5 +90,7 @@ export function useCartController(cartItem: CartItem[], onConfirmOrder: () => vo
     isDescriptionModalVisible,
     handleOpenDescriptionModal,
     handleCloseDescriptionModal,
+    setDescription,
+    description,
   };
 }

@@ -27,7 +27,7 @@ export function useHomeController() {
   }, []);
 
   async function handleSelectCategory(categoryId: string) {
-    const route = !categoryId ? '/products' : `/products/${categoryId}`;
+    const route = !categoryId ? '/products' : `/categories/${categoryId}/products`;
 
     setIsLoadingProducts(true);
 
@@ -61,7 +61,7 @@ export function useHomeController() {
     }
 
     setCartItems((prevState) => {
-      const itemIndex = prevState.findIndex(cartItem => cartItem.product.id === product.id);
+      const itemIndex = prevState.findIndex(cartItem => cartItem.product._id === product._id);
 
       if (itemIndex < 0) {
         return prevState.concat({
@@ -84,7 +84,7 @@ export function useHomeController() {
 
   function handleDecrementCartItem(product: Product) {
     setCartItems((prevState) => {
-      const itemIndex = prevState.findIndex(cartItem => cartItem.product.id === product.id);
+      const itemIndex = prevState.findIndex(cartItem => cartItem.product._id === product._id);
       const item = prevState[itemIndex];
       const newCartItems = [...prevState];
 
