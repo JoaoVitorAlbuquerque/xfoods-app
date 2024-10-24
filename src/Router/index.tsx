@@ -14,7 +14,7 @@ export function Router() {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
-          <Tab.Screen name="Pedidos" component={Order} />
+          <Tab.Screen name="Pedidos" component={Order} options={{ headerStyle: { backgroundColor: '#fafafa' } }} />
           <Tab.Screen name="Meu Perfil" component={Settings} />
         </Tab.Navigator>
       </NavigationContainer>
