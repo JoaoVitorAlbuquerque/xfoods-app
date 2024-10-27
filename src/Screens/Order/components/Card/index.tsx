@@ -24,6 +24,7 @@ export function Card({ orders }: CardProps) {
       renderItem={({ item: order }) => (
         <CardContainer
           onPress={() => updateReadOrderStatus(order._id, order.read)}
+          style={{ opacity: order.read ? 0.5 : 1 }}
         >
           <Header>
             <Text>Mesa {order.table}</Text>

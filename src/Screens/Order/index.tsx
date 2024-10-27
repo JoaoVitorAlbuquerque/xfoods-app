@@ -20,18 +20,6 @@ export default function Order() {
           />
         </View>
       </View>
-
-      {/* <View>
-        <Text size={18} weight='600' color='#666' style={{ marginTop: 44 }}>
-          Anteriores
-        </Text>
-
-        <View style={{ marginTop: 24, gap: 8 }}>
-          <Card
-            orders={ordersHistory}
-          />
-        </View>
-      </View> */}
     </View>
   );
 };

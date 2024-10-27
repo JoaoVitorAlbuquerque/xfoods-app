@@ -7,7 +7,7 @@ export function useOrderController() {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    api.get('/orders/history?month=9&year=2024').then(({ data }) => {
+    api.get('/orders/dashboard').then(({ data }) => {
       setOrders(data);
     });
   }, []);
